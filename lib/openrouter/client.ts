@@ -140,6 +140,39 @@ export async function completeJson<T>(options: CompleteJsonOptions<T>): Promise<
   return parsed.data;
 }
 
+export interface CompleteTextOptions {
+  system: string;
+  messages: ChatMessage[];
+  maxTokens?: number;
+  event: string;
+}
+
+export async function completeText(options: CompleteTextOptions): Promise<string> {
+  const body = {
+    model: textModel(),
+    stream: false,
+    max_tokens: options.maxTokens ?? 4000,
+    reasoning: { enabled: false },
+    messages: [
+      { role: "system", content: options.system },
+      ...options.messages,
+    ],
+  };
+
+  const payload = await request(body, options.event);
+  const completion = OpenRouterCompletionSchema.safeParse(payload);
+  if (!completion.success) {
+    throw new AiError("AI_INVALID_RESPONSE", 502);
+  }
+
+  const choice = completion.data.choices[0];
+  if (!choice?.message.content) {
+    throw new AiError("AI_INVALID_RESPONSE", 502);
+  }
+
+  return choice.message.content.trim();
+}
+
 export function isOpenRouterConfigured(): boolean {
   const key = getApiKey();
   return Boolean(key && key.length > 0);

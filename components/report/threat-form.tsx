@@ -5,6 +5,7 @@ import { Loader2, ShieldAlert } from "lucide-react";
 import { analyzeThreat } from "@/app/actions/analyze-threat";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Select } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { VerdictDisplay } from "@/components/report/verdict-display";
 
@@ -12,8 +13,18 @@ const EXAMPLE_PHISHING = `PILNE: Twoje konto Microsoft zostanie zawieszone za 2 
 Kliknij tutaj aby zweryfikować hasło: http://micros0ft-login.xyz/verify
 Jeśli nie potwierdzisz danych, utracisz dostęp do skrzynki.`;
 
+const DEPARTMENTS = [
+  "Finanse",
+  "IT",
+  "Kadry",
+  "Sekretariat",
+  "Obsługa mieszkańców",
+  "Inne",
+];
+
 export function ThreatForm() {
   const [content, setContent] = useState("");
+  const [department, setDepartment] = useState("Finanse");
   const [result, setResult] = useState<Awaited<ReturnType<typeof analyzeThreat>> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -21,7 +32,7 @@ export function ThreatForm() {
   function handleSubmit() {
     setError(null);
     startTransition(async () => {
-      const response = await analyzeThreat({ content });
+      const response = await analyzeThreat({ content, department });
       if (!response.success) {
         setError(response.error);
         setResult(null);
@@ -44,6 +55,19 @@ export function ThreatForm() {
         </CardDescription>
 
         <div className="mt-6 space-y-4">
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-300">
+              Dział zgłaszający
+            </label>
+            <Select
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+            >
+              {DEPARTMENTS.map((dept) => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </Select>
+          </div>
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}

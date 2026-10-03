@@ -24,17 +24,40 @@ enum IncidentSeverity {
   HIGH
 }
 
+enum AlertChannelType {
+  SLACK
+  DISCORD
+  TELEGRAM
+}
+
+enum AlertDeliveryStatus {
+  SUCCESS
+  FAILED
+}
+
+enum AuditLogLevel {
+  INFO
+  WARNING
+  CRITICAL
+  ACTION
+}
+
 model Organization {
-  id        String   @id @default(cuid())
-  name      String
-  sector    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String           @id @default(cuid())
+  name             String
+  sector           String?
+  alertsEnabled    Boolean          @default(true)
+  alertMinSeverity IncidentSeverity @default(HIGH)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   users              User[]
   incidents          SecurityIncident[]
   playbooks          Playbook[]
   stepCompletions    StepCompletion[]
+  alertChannels      AlertChannel[]
+  alertDeliveries    AlertDelivery[]
+  auditLogs          AuditLog[]
 }
 
 model User {
@@ -53,6 +76,7 @@ model User {
 model SecurityIncident {
   id             String           @id @default(cuid())
   title          String?
+  department     String?
   content        String           @db.Text
   status         IncidentStatus   @default(PENDING)
   severity       IncidentSeverity @default(LOW)
@@ -66,9 +90,12 @@ model SecurityIncident {
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   reportedBy   User?        @relation(fields: [reportedById], references: [id], onDelete: SetNull)
+  auditLogs    AuditLog[]
+  demoSessionId String?
 
   @@index([organizationId, createdAt])
   @@index([status])
+  @@index([demoSessionId])
 }
 
 model Playbook {
@@ -111,4 +138,61 @@ model StepCompletion {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([stepId, organizationId])
+}
+
+model AlertChannel {
+  id             String           @id @default(cuid())
+  organizationId String
+  name           String
+  type           AlertChannelType
+  webhookUrl     String?
+  botToken       String?
+  chatId         String?
+  isEnabled      Boolean          @default(true)
+  minSeverity    IncidentSeverity @default(HIGH)
+  lastTestedAt   DateTime?
+  lastTestStatus AlertDeliveryStatus?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  deliveries   AlertDelivery[]
+
+  @@index([organizationId, isEnabled])
+}
+
+model AlertDelivery {
+  id             String              @id @default(cuid())
+  organizationId String
+  channelId      String?
+  incidentId     String?
+  channelName    String
+  channelType    AlertChannelType
+  status         AlertDeliveryStatus
+  message        String?             @db.Text
+  errorMessage   String?
+  createdAt      DateTime            @default(now())
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  channel      AlertChannel? @relation(fields: [channelId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+}
+
+model AuditLog {
+  id             String        @id @default(cuid())
+  organizationId String
+  incidentId     String?
+  demoSessionId  String?
+  level          AuditLogLevel
+  message        String        @db.Text
+  source         String        @default("Cyber Strażnik")
+  occurredAt     DateTime
+  createdAt      DateTime      @default(now())
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  incident     SecurityIncident? @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, occurredAt])
+  @@index([demoSessionId])
 }

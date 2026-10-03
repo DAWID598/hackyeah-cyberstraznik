@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShieldAlert, Siren } from "lucide-react";
+import { Bell, FileText, LayoutDashboard, ShieldAlert, Siren } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/report", label: "Zgłoś zagrożenie", icon: ShieldAlert },
   { href: "/playbook", label: "Kryzysownik", icon: Siren },
+  { href: "/alerts", label: "Alerty", icon: Bell },
+  { href: "/admin", label: "Admin / CERT", icon: FileText },
 ];
 
 export function Sidebar() {

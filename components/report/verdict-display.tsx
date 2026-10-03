@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, CheckCircle2, Siren } from "lucide-react";
+import { AlertTriangle, Bell, CheckCircle2, Siren } from "lucide-react";
 import type { analyzeThreat } from "@/app/actions/analyze-threat";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -50,6 +50,13 @@ export function VerdictDisplay({ result }: { result: Result }) {
           ))}
         </ul>
       </div>
+
+      {isThreat && result.alertSent ? (
+        <p className="mt-4 flex items-center gap-2 text-sm text-amber-300">
+          <Bell className="h-4 w-4" />
+          Alert wysłany na: {result.alertChannels?.join(", ")}
+        </p>
+      ) : null}
 
       {isThreat ? (
         <div className="mt-6 flex flex-wrap gap-3">
