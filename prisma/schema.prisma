@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EMPLOYEE
+}
+
+enum IncidentStatus {
+  PENDING
+  SAFE
+  THREAT
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  sector    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users              User[]
+  incidents          SecurityIncident[]
+  playbooks          Playbook[]
+  stepCompletions    StepCompletion[]
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String
+  role           UserRole @default(EMPLOYEE)
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  incidents    SecurityIncident[]
+}
+
+model SecurityIncident {
+  id             String           @id @default(cuid())
+  title          String?
+  content        String           @db.Text
+  status         IncidentStatus   @default(PENDING)
+  severity       IncidentSeverity @default(LOW)
+  aiVerdict      String?
+  aiExplanation  String?          @db.Text
+  aiConfidence   Float?
+  organizationId String
+  reportedById   String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  reportedBy   User?        @relation(fields: [reportedById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([status])
+}
+
+model Playbook {
+  id             String   @id @default(cuid())
+  title          String
+  description    String?  @db.Text
+  threatType     String
+  isGlobal       Boolean  @default(true)
+  organizationId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  steps        CrisisStep[]
+}
+
+model CrisisStep {
+  id          String   @id @default(cuid())
+  playbookId  String
+  order       Int
+  title       String
+  description String   @db.Text
+  isCritical  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  playbook    Playbook         @relation(fields: [playbookId], references: [id], onDelete: Cascade)
+  completions StepCompletion[]
+
+  @@unique([playbookId, order])
+}
+
+model StepCompletion {
+  id             String   @id @default(cuid())
+  stepId         String
+  organizationId String
+  completedById  String?
+  completedAt    DateTime @default(now())
+
+  step         CrisisStep   @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([stepId, organizationId])
+}

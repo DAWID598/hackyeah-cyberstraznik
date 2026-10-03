@@ -1,0 +1,41 @@
+Jesteś głównym architektem oprogramowania (Lead Software Architect & Full-Stack Engineer) oraz ekspertem ds. UX/UI. Pomagasz mi zaprojektować i zbudować MVP systemu o nazwie **„Cyber Strażnik” (Cyber Guardian)** na hackathon w kategorii **DEFENCE**.
+
+### Kontekst projektu:
+System ma wspierać mniejsze organizacje (np. urzędy gmin, małe szkoły, lokalne firmy), które nie mają budżetu na zaawansowane działy SOC (Security Operations Center). Cel to zapobieganie zagrożeniom, wczesne wykrywanie (np. weryfikacja podejrzanych wiadomości) oraz pomoc w kryzysie (procedury Incident Response krok po kroku).
+
+### Stos technologiczny:
+- **Frontend & Backend:** Next.js (App Router, Server Actions / API Routes)
+- **Stylizacja:** Tailwind CSS + komponenty UI (np. Shadcn/ui)
+- **Baza danych & ORM:** PostgreSQL + Prisma ORM (lub Drizzle)
+- **AI Integration:** OpenAI API / LangChain / Vercel AI SDK (do analizy podejrzanych treści i generowania procedur kryzysowych)
+
+---
+
+### Twoje zadanie:
+Przygotuj kompleksowy plan wdrożenia tego MVP w formie struktur, kodu i instrukcji. Podziel swoją odpowiedź na następujące sekcje:
+
+1. **Architektura Bazy Danych (Prisma / SQL Schema):**
+   - Zaprojektuj modele dla:
+     - `User` (użytkownicy/pracownicy,rola: Admin / Pracownik)
+     - `Organization` (organizacja/firma)
+     - `SecurityIncident` (zgłoszone incydenty/podejrzane maile, status: Pending, Safe, Threat, severity: Low/Medium/High)
+     - `Playbook` lub `CrisisStep` (kroki procedur awaryjnych)
+
+     dodaj baze dnaych postgres na dockerze 
+
+2. **Struktura Katalogów projektu Next.js (App Router):**
+   - Rozpisz drzewo katalogów (np. `/app/(dashboard)`, `/app/api`, `/components`, `/lib`, itp.).
+
+3. **Kluczowe Komponenty i Widoki (User Flow):**
+   - Opisz lub daj szkielet kodu dla 3 kluczowych ekranów:
+     - **Ekran 1: Dashboard / Health Score** (ogólny stan bezpieczeństwa organizacji).
+     - **Ekran 2: „Zgłoś / Sprawdź zagrożenie” (The Panic Button)** – formularz, w którym pracownik wkleja treść podejrzanego maila/wiadomości, a backend wysyła to do AI i zwraca werdykt (Phishing/Safe) z wyjaśnieniem.
+     - **Ekran 3: Kryzysownik (Incident Playbook)** – interaktywna check-lista dla administratora, co robić krok po kroku w razie ataku (np. ransomware).
+
+4. **Przykładowa implementacja backendowa (Server Action / API):**
+   - Napisz przykładowy kod w Next.js (Server Action), który przyjmuje treść podejrzanej wiadomości od użytkownika, wysyła zapytanie do modelu AI z odpowiednim promptem systemowym analityka bezpieczeństwa i zapisuje wynik w bazie danych Postgres.
+
+5. **Wskazówki pod prezentację na Hackathonie:**
+   - Podpowiedz, co pokazać w demo, aby maksymalnie zapunktować u jury w kryteriach: *Idea & Innovation*, *Practical Applicability*, oraz *Design*.
+
+Zadbaj o to, aby kod był czysty, nowoczesny (TypeScript) i gotowy do szybkiego wdrożenia w warunkach hackathonu.
