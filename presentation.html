@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Strażnik — Pitch Deck DEFENCE</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --surface: #0f172a;
+      --border: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --cyan: #22d3ee;
+      --cyan-dim: #0891b2;
+      --rose: #fb7185;
+      --emerald: #34d399;
+      --amber: #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 3rem 4rem 5rem;
+      background: radial-gradient(ellipse at 80% 20%, rgba(34, 211, 238, 0.08), transparent 50%),
+                  radial-gradient(ellipse at 10% 90%, rgba(251, 113, 133, 0.06), transparent 40%),
+                  var(--bg);
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slide.active { display: flex; }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .brand-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      background: rgba(34, 211, 238, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cyan);
+      font-size: 1rem;
+    }
+
+    .slide-num {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 .accent { color: var(--cyan); }
+
+    .takeaway {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      max-width: 52rem;
+    }
+
+    .takeaway-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      white-space: nowrap;
+      padding-top: 0.15rem;
+    }
+
+    .takeaway p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-content: start;
+    }
+
+    .content.single { grid-template-columns: 1fr; }
+
+    ul.bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    ul.bullets li {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 1.05rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    ul.bullets li::before {
+      content: "▸";
+      color: var(--cyan);
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+
+    .visual {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .visual h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .stat {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+
+    .stat .val { font-size: 1.75rem; font-weight: 700; color: var(--cyan); }
+    .stat .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .flow-step .n {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: rgba(34, 211, 238, 0.2);
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .badge.safe { border-color: rgba(52, 211, 153, 0.4); color: var(--emerald); }
+    .badge.threat { border-color: rgba(251, 113, 133, 0.4); color: var(--rose); }
+
+    .criteria {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+
+    .criteria-item {
+      text-align: center;
+      padding: 1rem 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+    }
+
+    .criteria-item .pct { font-size: 1.5rem; font-weight: 700; color: var(--cyan); }
+    .criteria-item .name { font-size: 0.7rem; color: var(--muted); margin-top: 0.35rem; line-height: 1.3; }
+
+    .speaker-note {
+      margin-top: auto;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .speaker-note .icon {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--amber);
+      white-space: nowrap;
+      padding-top: 0.2rem;
+    }
+
+    .speaker-note p {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .title-slide {
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+    }
+
+    .title-slide h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+    .title-slide .subtitle { font-size: 1.35rem; color: var(--muted); margin-bottom: 2rem; }
+    .title-slide .meta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .title-slide .meta span {
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 2rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .nav button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .nav button:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .progress {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--cyan);
+      transition: width 0.3s;
+      z-index: 100;
+    }
+
+    .stack { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .stack span {
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+    }
+
+    @media print {
+      body { overflow: visible; height: auto; }
+      .slide {
+        display: flex !important;
+        page-break-after: always;
+        height: 100vh;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .nav, .progress { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="deck" id="deck">
+
+    <!-- SLIDE 1 -->
+    <section class="slide active title-slide" data-slide="1">
+      <div>
+        <div class="brand" style="justify-content:center;margin-bottom:2rem">
+          <div class="brand-icon">🛡</div>
+          HackYeah · DEFENCE · Open Task
+        </div>
+        <h1>Cyber <span class="accent">Strażnik</span></h1>
+        <p class="subtitle">Cyberbezpieczeństwo dla organizacji bez własnego SOC</p>
+        <div class="meta">
+          <span>Next.js + PostgreSQL + AI</span>
+          <span>MVP gotowe do demo</span>
+          <span>Kategoria DEFENCE</span>
+        </div>
+      </div>
+      <div class="speaker-note" style="max-width:40rem;margin:3rem auto 0">
+        <span class="icon">🎤 Notatka</span>
+        <p>Dzień dobry. Prezentujemy Cyber Strażnika — narzędzie, które daje małym organizacjom to, czego dziś nie mają: szybką reakcję na cyberzagrożenia bez działu SOC i bez żargonu technicznego.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 2 -->
+    <section class="slide" data-slide="2">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">02 / 10</span>
+      </div>
+      <h1>Problem: cyberataki trafiają tam,<br>gdzie <span class="accent">nikt nie pilnuje</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Małe organizacje są pierwszą linią obrony — ale nie mają narzędzi, ludzi ani procedur SOC.</p>
+      </div>
+      <div class="content">
+        <ul class="bullets">
+          <li>91% ataków zaczyna się od phishingu — jeden klik wystarczy</li>
+          <li>Urzędy gmin, szkoły i MŚP nie mają budżetu na 24/7 SOC</li>
+          <li>Pracownicy nie wiedzą, co zrobić po podejrzanym mailu</li>
+          <li>Po incydencie brakuje gotowego raportu dla CERT / RODO</li>
+          <li>Każda minuta zwłoki = większe straty i wyższe ryzyko prawne</li>
+        </ul>
+        <div class="visual">
+          <h3>Luka bezpieczeństwa</h3>
+          <div class="stat-grid">
+            <div class="stat"><div class="val">0 zł</div><div class="lbl">Budżet SOC w gminie</div></div>
+            <div class="stat"><div class="val">100%</div><div class="lbl">Pracowników na linii frontu</div></div>
+            <div class="stat"><div class="val">72h</div><div class="lbl">Na zgłoszenie do UODO</div></div>
+            <div class="stat"><div class="val">∞</div><div class="lbl">Presja czasu w kryzysie</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>Nawiąż do Defence: to nie jest problem „wielkich korporacji”. To problem obrony cywilnej — każdy urzędnik i nauczyciel jest dziś celem. Informacje są niekompletne, zasoby ograniczone — dokładnie jak w waszym briefie kategorii DEFENCE.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section class="slide" data-slide="3">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">03 / 10</span>
+      </div>
+      <h1>Kogo <span class="accent">chronimy?</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Cyber Strażnik jest zaprojektowany dla nietechnicznych użytkowników — nie dla ekspertów SOC.</p>
+      </div>
+      <div class="content">
+        <ul class="bullets">
+          <li><strong>Pracownik</strong> — wkleja podejrzany mail, dostaje werdykt po polsku</li>
+          <li><strong>Administrator IT</strong> — dashboard, alerty webhook, kryzysownik</li>
+          <li><strong>Kierownictwo</strong> — Health Score i raport CERT/RODO jednym kliknięciem</li>
+          <li><strong>Organizacje docelowe:</strong> urzędy gmin, szkoły, MŚP, NGO</li>
+          <li>Zero żargonu — komunikaty: Bezpieczne / Zagrożenie / Krytyczne</li>
+        </ul>
+        <div class="visual">
+          <h3>Persony użytkowników</h3>
+          <div class="flow">
+            <div class="flow-step"><span class="n">👤</span> Księgowa — „Czy ten mail o fakturze jest prawdziwy?"</div>
+            <div class="flow-step"><span class="n">👤</span> IT w gminie — „Kto zgłosił incydent i co robić?"</div>
+            <div class="flow-step"><span class="n">👤</span> Wójt / Dyrektor — „Jaki mamy stan i co raportujemy?"</div>
+          </div>
+          <div class="badge-row">
+            <span class="badge">Urząd gminy</span>
+            <span class="badge">Szkoła</span>
+            <span class="badge">Mała firma</span>
+            <span class="badge">NGO</span>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>Kryterium Usability: nie budujemy kolejnego dashboardu dla ekspertów. Budujemy „ludzki firewall" — każdy pracownik może działać bez szkolenia z cyberbezpieczeństwa. To demokratyzacja ochrony.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section class="slide" data-slide="4">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">04 / 10</span>
+      </div>
+      <h1>Rozwiązanie: <span class="accent">3 filary obrony</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Zapobieganie → Wykrywanie → Reagowanie — w jednym narzędziu, bez integracji z drogim SOC.</p>
+      </div>
+      <div class="content single">
+        <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="visual">
+            <h3>1. Panic Button</h3>
+            <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.5;margin-bottom:1rem">Weryfikacja podejrzanych wiadomości AI. Werdykt: Safe / Threat z wyjaśnieniem po polsku.</p>
+            <span class="badge threat">Phishing</span>
+            <span class="badge safe">Safe</span>
+          </div>
+          <div class="visual">
+            <h3>2. Kryzysownik</h3>
+            <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.5;margin-bottom:1rem">7 procedur IR: ransomware, phishing, BEC, malware, smishing, wyciek RODO, przejęcie konta.</p>
+            <span class="badge">Checklista krok po kroku</span>
+          </div>
+          <div class="visual">
+            <h3>3. Raport CERT/RODO</h3>
+            <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.5;margin-bottom:1rem">Demo jednym kliknięciem: 5 zdarzeń AuditLog → raport Markdown dla CERT i IOD.</p>
+            <span class="badge">AI-generated</span>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>To jest nasza innowacja: pełny cykl obrony w jednym MVP. Nie tylko detekcja — także procedura kryzysowa i formalny raport. Relation to Category: zapobieganie (edukacja), wczesne wykrywanie (AI), redukcja konsekwencji (playbook + CERT).</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 5 -->
+    <section class="slide" data-slide="5">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">05 / 10</span>
+      </div>
+      <h1>Panic Button — <span class="accent">AI jako analityk SOC</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Każdy pracownik ma w kieszeni analityka bezpieczeństwa — wynik w 5 sekund, zapisany w bazie.</p>
+      </div>
+      <div class="content">
+        <ul class="bullets">
+          <li>Pracownik wkleja treść maila / SMS</li>
+          <li>OpenRouter AI analizuje: phishing, presja czasowa, podejrzane linki</li>
+          <li>Werdykt + pewność modelu + lista wskaźników po polsku</li>
+          <li>Incydent zapisany w PostgreSQL — widoczny na dashboardzie</li>
+          <li>Przy THREAT + HIGH → alert webhook (Slack / Discord / Telegram)</li>
+        </ul>
+        <div class="visual">
+          <h3>Przepływ użytkownika</h3>
+          <div class="flow">
+            <div class="flow-step"><span class="n">1</span> Wklej wiadomość</div>
+            <div class="flow-step"><span class="n">2</span> AI analizuje (OpenRouter)</div>
+            <div class="flow-step"><span class="n">3</span> Werdykt: 🟢 Safe / 🔴 Threat</div>
+            <div class="flow-step"><span class="n">4</span> Alert na kanał admina</div>
+            <div class="flow-step"><span class="n">5</span> Uruchom Kryzysownik</div>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>Na live demo wklejamy przykład phishingu o zawieszeniu konta Microsoft. AI zwraca werdykt Threat, spada Health Score, leci alert na Slack. Idea & Innovation: AI nie zastępuje eksperta — go demokratyzuje.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 6 -->
+    <section class="slide" data-slide="6">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">06 / 10</span>
+      </div>
+      <h1>Kryzysownik + Alerty <span class="accent">na żywo</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Administrator nie musi siedzieć w dashboardzie 24/7 — system go budzi, gdy jest krytycznie.</p>
+      </div>
+      <div class="content">
+        <ul class="bullets">
+          <li>7 interaktywnych playbooków (ransomware, BEC, malware…)</li>
+          <li>Checklista krok po kroku z oznaczeniem kroków krytycznych</li>
+          <li>Panel alertów: webhooki Slack / Discord / Telegram w bazie</li>
+          <li>Historia dostaw + test webhooka z panelu admina</li>
+          <li>„🚨 Wykryto phishing w dziale Finansów!" — natychmiast na kanale IT</li>
+        </ul>
+        <div class="visual">
+          <h3>Przykład alertu</h3>
+          <div style="background:#1e1e2e;border-radius:0.5rem;padding:1rem;font-size:0.85rem;line-height:1.6;color:#e2e8f0;font-family:monospace">
+            🚨 <strong>UWAGA:</strong> Wykryto próbę phishingu<br>
+            w dziale <span style="color:#fbbf24">Finanse</span>!<br><br>
+            Organizacja: Urząd Gminy Przykładowo<br>
+            Poziom: HIGH (94% pewności)<br>
+            <span style="color:#22d3ee">→ Szczegóły w dashboardzie</span>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>Defence pod presją czasu: w ransomware pierwsze 60 minut decyduje o wszystkim. Kryzysownik prowadzi admina krok po kroku. Webhooki pokazują, że aplikacja żyje w ekosystemie firmy — nie jest izolowanym narzędziem.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 7 -->
+    <section class="slide" data-slide="7">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">07 / 10</span>
+      </div>
+      <h1>Demo CERT — <span class="accent">raport jednym kliknięciem</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Scenariusz ransomware w 20 minut → gotowy raport CERT/RODO generowany przez AI z logów AuditLog.</p>
+      </div>
+      <div class="content">
+        <ul class="bullets">
+          <li>Przycisk „Uruchom demo incydentu" w panelu admina</li>
+          <li>5 zdarzeń AuditLog: INFO → WARNING → CRITICAL → ACTION</li>
+          <li>AI generuje raport Markdown: streszczenie, oś czasu, MITRE, RODO</li>
+          <li>Kopiuj / pobierz .md — gotowe do CERT Polska i IOD</li>
+          <li>Fallback bez AI — raport działa nawet offline</li>
+        </ul>
+        <div class="visual">
+          <h3>Oś czasu demo</h3>
+          <div class="flow" style="font-size:0.8rem">
+            <div class="flow-step"><span class="n">12:00</span> [INFO] Zgłoszenie faktura-korekta.pdf.exe</div>
+            <div class="flow-step"><span class="n">12:02</span> [WARNING] AI: Ransomware/Trojan</div>
+            <div class="flow-step"><span class="n">12:05</span> [CRITICAL] Szyfrowanie PC-FIN-04</div>
+            <div class="flow-step"><span class="n">12:07</span> [ACTION] Izolacja stacji</div>
+            <div class="flow-step"><span class="n">12:12</span> [ACTION] Logi + powiadomienie zarządu</div>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>To jest killer feature na demo: jeden klik, jury widzi realne dane w bazie i profesjonalny raport. Completeness: nie mockujemy — to działa na PostgreSQL. Practical Applicability: gmina po incydencie ma co wysłać do CERT bez konsultanta za 5000 zł/h.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 8 -->
+    <section class="slide" data-slide="8">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">08 / 10</span>
+      </div>
+      <h1>Stack <span class="accent">technologiczny</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Nowoczesny, skalowalny stack open-source — gotowy do wdrożenia w chmurze lub on-premise gminy.</p>
+      </div>
+      <div class="content">
+        <div class="visual">
+          <h3>Frontend & Backend</h3>
+          <div class="stack" style="margin-bottom:1.5rem">
+            <span>Next.js 16 App Router</span>
+            <span>Server Actions</span>
+            <span>TypeScript</span>
+            <span>Tailwind CSS 4</span>
+          </div>
+          <h3>Dane & AI</h3>
+          <div class="stack" style="margin-bottom:1.5rem">
+            <span>PostgreSQL 16</span>
+            <span>Prisma ORM</span>
+            <span>Docker Compose</span>
+            <span>OpenRouter AI</span>
+          </div>
+          <h3>Integracje</h3>
+          <div class="stack">
+            <span>Slack Webhooks</span>
+            <span>Discord</span>
+            <span>Telegram Bot API</span>
+          </div>
+        </div>
+        <div class="visual">
+          <h3>Architektura (uproszczona)</h3>
+          <div class="flow">
+            <div class="flow-step"><span class="n">UI</span> Pracownik / Admin (React)</div>
+            <div class="flow-step"><span class="n">→</span> Server Actions (Next.js)</div>
+            <div class="flow-step"><span class="n">→</span> PostgreSQL (incydenty, logi, webhooki)</div>
+            <div class="flow-step"><span class="n">→</span> OpenRouter AI (analiza + raport CERT)</div>
+            <div class="flow-step"><span class="n">→</span> Webhooki (Slack / Discord / Telegram)</div>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>Completeness & Implementation Value: to nie jest prototyp na Figmy — to działające MVP z migracjami Prisma, seedem, Dockerem i buildem produkcyjnym. Gmina może to hostować na własnym serwerze — zero vendor lock-in.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 9 -->
+    <section class="slide" data-slide="9">
+      <div class="slide-header">
+        <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
+        <span class="slide-num">09 / 10</span>
+      </div>
+      <h1>Dopasowanie do <span class="accent">kryteriów jury</span></h1>
+      <div class="takeaway">
+        <span class="takeaway-label">Key Takeaway</span>
+        <p>Cyber Strażnik adresuje każde kryterium DEFENCE — od innowacji po gotowość wdrożeniową.</p>
+      </div>
+      <div class="content single">
+        <div class="criteria">
+          <div class="criteria-item">
+            <div class="pct">30%</div>
+            <div class="name">Idea &<br>Innovation</div>
+            <p style="font-size:0.7rem;color:#64748b;margin-top:0.5rem">AI + ludzki firewall</p>
+          </div>
+          <div class="criteria-item">
+            <div class="pct">20%</div>
+            <div class="name">Relation to<br>Category</div>
+            <p style="font-size:0.7rem;color:#64748b;margin-top:0.5rem">Obrona cywilna IT</p>
+          </div>
+          <div class="criteria-item">
+            <div class="pct">20%</div>
+            <div class="name">Practical<br>Applicability</div>
+            <p style="font-size:0.7rem;color:#64748b;margin-top:0.5rem">UX dla urzędników</p>
+          </div>
+          <div class="criteria-item">
+            <div class="pct">20%</div>
+            <div class="name">Design</div>
+            <p style="font-size:0.7rem;color:#64748b;margin-top:0.5rem">Czytelne stany alarmowe</p>
+          </div>
+          <div class="criteria-item">
+            <div class="pct">10%</div>
+            <div class="name">Completeness</div>
+            <p style="font-size:0.7rem;color:#64748b;margin-top:0.5rem">Działające MVP</p>
+          </div>
+        </div>
+        <ul class="bullets" style="margin-top:2rem">
+          <li><strong>Innovation:</strong> Demokratyzacja SOC — AI dla każdego pracownika</li>
+          <li><strong>Defence:</strong> Zapobieganie + detekcja + reakcja pod presją czasu</li>
+          <li><strong>Usability:</strong> Panic Button bez żargonu, playbooki po polsku</li>
+          <li><strong>Design:</strong> Dark UI, kolory semantyczne Safe/Threat/Critical</li>
+          <li><strong>Completeness:</strong> DB, AI, webhooki, demo CERT — wszystko live</li>
+        </ul>
+      </div>
+      <div class="speaker-note">
+        <span class="icon">🎤 Notatka</span>
+        <p>Świadomie projektowaliśmy pod waszą rubrykę. Każda funkcja odpowiada na konkretne kryterium — nie dodawaliśmy „feature'ów dla feature'ów".</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 10 -->
+    <section class="slide title-slide" data-slide="10">
+      <div>
+        <h1>Dziękujemy.<br><span class="accent">Chrońmy tych, którzy nas chronią.</span></h1>
+        <p class="subtitle" style="margin-top:1.5rem">Cyber Strażnik — bezpieczeństwo bez SOC, reakcja bez paniki.</p>
+        <div class="meta" style="margin-top:2rem">
+          <span>🔗 Live demo: localhost:3000</span>
+          <span>📋 /report · /playbook · /admin</span>
+        </div>
+        <ul class="bullets" style="margin-top:2.5rem;text-align:left;max-width:32rem;margin-left:auto;margin-right:auto">
+          <li>Q1: SSO / logowanie (Azure AD, Google)</li>
+          <li>Q2: Integracja z skrzynkami e-mail (M365 API)</li>
+          <li>Q3: Eksport raportu do PDF + zgłoszenie incydent.cert.pl</li>
+          <li>Q4: Model SaaS dla samorządów Małopolski</li>
+        </ul>
+      </div>
+      <div class="speaker-note" style="max-width:40rem;margin:2rem auto 0">
+        <span class="icon">🎤 Notatka</span>
+        <p>Zapraszamy na live demo: phishing → alert Slack → kryzysownik → raport CERT. Pytania? Jesteśmy gotowi. Cyber Strażnik — bo bezpieczeństwo nie powinno zależeć od wielkości budżetu.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <nav class="nav">
+    <button id="prev" aria-label="Poprzedni slajd">← Wstecz</button>
+    <button id="next" aria-label="Następny slajd">Dalej →</button>
+    <button id="print" aria-label="Drukuj PDF">🖨 PDF</button>
+  </nav>
+
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const progress = document.getElementById("progress");
+    let current = 0;
+
+    function show(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((s, i) => s.classList.toggle("active", i === current));
+      progress.style.width = ((current + 1) / slides.length * 100) + "%";
+    }
+
+    document.getElementById("prev").addEventListener("click", () => show(current - 1));
+    document.getElementById("next").addEventListener("click", () => show(current + 1));
+    document.getElementById("print").addEventListener("click", () => window.print());
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); show(current + 1); }
+      if (e.key === "ArrowLeft") show(current - 1);
+      if (e.key === "Home") show(0);
+      if (e.key === "End") show(slides.length - 1);
+    });
+
+    show(0);
+  </script>
+</body>
+</html>
