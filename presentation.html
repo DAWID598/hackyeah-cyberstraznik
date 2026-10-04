@@ -20,33 +20,47 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      overflow-x: hidden;
+    }
+
     body {
       font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
-      overflow: hidden;
-      height: 100vh;
+      overflow-x: hidden;
     }
 
     .deck {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
+      width: 100%;
     }
 
     .slide {
-      display: none;
+      display: flex;
       width: 100%;
-      height: 100%;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100vh;
+      min-height: 100dvh;
       padding: 3rem 4rem 5rem;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
       background: radial-gradient(ellipse at 80% 20%, rgba(34, 211, 238, 0.08), transparent 50%),
                   radial-gradient(ellipse at 10% 90%, rgba(251, 113, 133, 0.06), transparent 40%),
                   var(--bg);
       flex-direction: column;
       justify-content: space-between;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
     }
 
-    .slide.active { display: flex; }
+    .slide:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
 
     .slide-header {
       display: flex;
@@ -294,6 +308,10 @@
       z-index: 100;
     }
 
+    @media print {
+      .nav { display: none !important; }
+    }
+
     .nav button {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -326,16 +344,46 @@
       color: #e2e8f0;
     }
 
+    @page {
+      size: landscape;
+      margin: 0;
+    }
+
     @media print {
-      body { overflow: visible; height: auto; }
+      html {
+        scroll-snap-type: none;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+      }
+
+      .deck {
+        display: block;
+      }
+
       .slide {
         display: flex !important;
-        page-break-after: always;
+        width: 100%;
         height: 100vh;
+        min-height: 100vh;
+        max-height: 100vh;
+        margin: 0;
+        padding: 2.5rem 3rem 3rem;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
         print-color-adjust: exact;
         -webkit-print-color-adjust: exact;
       }
-      .nav, .progress { display: none; }
+
+      .slide:last-child {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+
+      .progress { display: none !important; }
     }
   </style>
 </head>
@@ -344,7 +392,7 @@
   <div class="deck" id="deck">
 
     <!-- SLIDE 1 -->
-    <section class="slide active title-slide" data-slide="1">
+    <section class="slide title-slide" data-slide="1" id="slide-1">
       <div>
         <div class="brand" style="justify-content:center;margin-bottom:2rem">
           <div class="brand-icon">🛡</div>
@@ -354,14 +402,14 @@
         <p class="subtitle">Cyberbezpieczeństwo dla organizacji bez własnego SOC</p>
         <div class="meta">
           <span>Next.js + PostgreSQL + AI</span>
-          <span>MVP gotowe do demo</span>
+          <span>Działające MVP</span>
           <span>Kategoria DEFENCE</span>
         </div>
       </div>
     </section>
 
     <!-- SLIDE 2 -->
-    <section class="slide" data-slide="2">
+    <section class="slide" data-slide="2" id="slide-2">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">02 / 10</span>
@@ -392,7 +440,7 @@
     </section>
 
     <!-- SLIDE 3 -->
-    <section class="slide" data-slide="3">
+    <section class="slide" data-slide="3" id="slide-3">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">03 / 10</span>
@@ -428,7 +476,7 @@
     </section>
 
     <!-- SLIDE 4 -->
-    <section class="slide" data-slide="4">
+    <section class="slide" data-slide="4" id="slide-4">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">04 / 10</span>
@@ -461,7 +509,7 @@
     </section>
 
     <!-- SLIDE 5 -->
-    <section class="slide" data-slide="5">
+    <section class="slide" data-slide="5" id="slide-5">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">05 / 10</span>
@@ -493,7 +541,7 @@
     </section>
 
     <!-- SLIDE 6 -->
-    <section class="slide" data-slide="6">
+    <section class="slide" data-slide="6" id="slide-6">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">06 / 10</span>
@@ -525,7 +573,7 @@
     </section>
 
     <!-- SLIDE 7 -->
-    <section class="slide" data-slide="7">
+    <section class="slide" data-slide="7" id="slide-7">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">07 / 10</span>
@@ -557,7 +605,7 @@
     </section>
 
     <!-- SLIDE 8 -->
-    <section class="slide" data-slide="8">
+    <section class="slide" data-slide="8" id="slide-8">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">08 / 10</span>
@@ -604,7 +652,7 @@
     </section>
 
     <!-- SLIDE 9 -->
-    <section class="slide" data-slide="9">
+    <section class="slide" data-slide="9" id="slide-9">
       <div class="slide-header">
         <div class="brand"><div class="brand-icon">🛡</div> Cyber Strażnik</div>
         <span class="slide-num">09 / 10</span>
@@ -653,14 +701,10 @@
     </section>
 
     <!-- SLIDE 10 -->
-    <section class="slide title-slide" data-slide="10">
+    <section class="slide title-slide" data-slide="10" id="slide-10">
       <div>
         <h1>Dziękujemy.<br><span class="accent">Chrońmy tych, którzy nas chronią.</span></h1>
         <p class="subtitle" style="margin-top:1.5rem">Cyber Strażnik — bezpieczeństwo bez SOC, reakcja bez paniki.</p>
-        <div class="meta" style="margin-top:2rem">
-          <span>🔗 Live demo: localhost:3000</span>
-          <span>📋 /report · /playbook · /admin</span>
-        </div>
         <ul class="bullets" style="margin-top:2.5rem;text-align:left;max-width:32rem;margin-left:auto;margin-right:auto">
           <li>Q1: SSO / logowanie (Azure AD, Google)</li>
           <li>Q2: Integracja z skrzynkami e-mail (M365 API)</li>
@@ -679,28 +723,49 @@
   </nav>
 
   <script>
-    const slides = document.querySelectorAll(".slide");
+    const slides = Array.from(document.querySelectorAll(".slide"));
     const progress = document.getElementById("progress");
     let current = 0;
 
-    function show(index) {
+    function updateProgress(index) {
       current = Math.max(0, Math.min(index, slides.length - 1));
-      slides.forEach((s, i) => s.classList.toggle("active", i === current));
       progress.style.width = ((current + 1) / slides.length * 100) + "%";
     }
+
+    function show(index) {
+      const next = Math.max(0, Math.min(index, slides.length - 1));
+      slides[next].scrollIntoView({ behavior: "smooth", block: "start" });
+      updateProgress(next);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const index = slides.indexOf(entry.target);
+          if (index >= 0) updateProgress(index);
+        });
+      },
+      { threshold: 0.55 }
+    );
+
+    slides.forEach((slide) => observer.observe(slide));
 
     document.getElementById("prev").addEventListener("click", () => show(current - 1));
     document.getElementById("next").addEventListener("click", () => show(current + 1));
     document.getElementById("print").addEventListener("click", () => window.print());
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); show(current + 1); }
-      if (e.key === "ArrowLeft") show(current - 1);
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        e.preventDefault();
+        show(current + 1);
+      }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") show(current - 1);
       if (e.key === "Home") show(0);
       if (e.key === "End") show(slides.length - 1);
     });
 
-    show(0);
+    updateProgress(0);
   </script>
 </body>
 </html>
